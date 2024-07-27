@@ -7,10 +7,8 @@ class Node(BaseModel):
     left: Optional['Node'] = None  
     right: Optional['Node'] = None  
 
-    class Config:
-        orm_mode = True
-        validate_assignment = True
-        arbitrary_types_allowed = True
+    class ConfigDict:
+        from_attributes = True
 
     def to_dict(self):
         return {

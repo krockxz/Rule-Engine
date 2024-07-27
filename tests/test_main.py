@@ -65,8 +65,21 @@ def test_modify_rule():
     rule_id = create_data["id"]
 
     # Now, modify the rule
-    new_rule_string = "((age > 35 AND department = 'Sales') OR (age < 20 AND department = 'Marketing')) AND (salary > 70000 OR experience > 8)"
-    modify_response = client.put(f"/modify_rule/{rule_id}", json={"rule_string": new_rule_string})
+    target_node = {
+        "type": "operator",
+        "value": ">",
+        "left": {"type": "operand", "value": "age"},
+        "right": {"type": "operand", "value": 30}
+    }
+    new_value = {
+        "type": "operator",
+        "value": "="
+    }
+    modify_response = client.put(f"/modify_rule/{rule_id}", json={
+        "modification_type": "change_operator",
+        "target_node": target_node,
+        "new_value": new_value
+    })
     assert modify_response.status_code == 200
     modify_data = modify_response.json()
     assert "ast" in modify_data

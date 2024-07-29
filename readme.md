@@ -1,3 +1,6 @@
+Here's the updated `README.md` file with the necessary information and instructions for copying and pasting into the Streamlit UI:
+
+```markdown
 # Rule Engine
 
 This project provides a rule engine that allows you to create, combine, evaluate, and modify rules.
@@ -134,8 +137,120 @@ To use this in the Streamlit UI, enter the Rule ID, select the Modification Type
 2. **Ease of Use**:
    - MongoDB's document model is intuitive and aligns well with the JSON format used for rules and ASTs.
 
-   ### Run tests
+### Run tests
 
 ```bash
 pytest tests/test_main.py
 ```
+
+## Streamlit UI Instructions
+
+### Create Rule
+
+**Enter Rule String**:
+```
+((age > 30 AND department = 'Sales') OR (age < 25 AND department = 'Marketing')) AND (salary > 50000 OR experience > 5)
+```
+
+### Combine Rules
+
+**Enter Rule Strings (one per line)**:
+```
+((age > 30 AND department = 'Sales') OR (age < 25 AND department = 'Marketing')) AND (salary > 50000 OR experience > 5)
+((age > 30 AND department = 'Marketing')) AND (salary > 20000 OR experience > 5)
+```
+
+### Evaluate Rule
+
+**Enter AST JSON**:
+```
+{
+    "type": "operator",
+    "value": "AND",
+    "left": {
+        "type": "operator",
+        "value": "OR",
+        "left": {
+            "type": "operator",
+            "value": "AND",
+            "left": {
+                "type": "operand",
+                "value": "age"
+            },
+            "right": {
+                "type": "operand",
+                "value": "department"
+            }
+        },
+        "right": {
+            "type": "operator",
+            "value": "AND",
+            "left": {
+                "type": "operand",
+                "value": "age"
+            },
+            "right": {
+                "type": "operand",
+                "value": "department"
+            }
+        }
+    },
+    "right": {
+        "type": "operator",
+        "value": "OR",
+        "left": {
+            "type": "operand",
+            "value": "salary"
+        },
+        "right": {
+            "type": "operand",
+            "value": "experience"
+        }
+    }
+}
+```
+
+**Enter Data Dict JSON**:
+```
+{
+    "age": 35,
+    "department": "Sales",
+    "salary": 60000,
+    "experience": 3
+}
+```
+
+### Modify Rule
+
+**Example Rule ID from Mongo**: `66a75d41b4e7d45f2c0dd565`
+
+**Select Modification Type**: `change_operator` (also supports `change_operand_value`, `add_sub_expression`, `remove_sub_expression`)
+
+**Enter Target Node JSON**:
+```
+{
+    "type": "operator",
+    "value": ">",
+    "left": {
+        "type": "operand",
+        "value": "age",
+        "left": null,
+        "right": null
+    },
+    "right": {
+        "type": "operand",
+        "value": 30,
+        "left": null,
+        "right": null
+    }
+}
+```
+
+**Enter New Value JSON (if applicable)**:
+```
+{
+    "type": "operator",
+    "value": "="
+}
+```
+
